@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop
  *
@@ -17,30 +18,26 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2019 PrestaShop SA
- *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA
+ * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
- *
- * Don't forget to prefix your containers with your own identifier
- * to avoid any conflicts with others containers.
  */
 
-
-setInterval(PositionSticker, 200);
-$(document).ready(function () {
-    PositionSticker();
-});
-PositionSticker();
-function PositionSticker() {
-    jQuery.each($('.thumbnail-container'), function (i, container) {
-        var $container = $(container);
-        var $box_sticker = $container.find('.stickers_bobs');
-        var $product_image_container = $container.find('.thumbnail.product-thumbnail');
-        $product_image_container.prepend($box_sticker);
-    });
-    $('.stickers_bobs').show();
+if (!defined('_PS_VERSION_')) {
+    exit;
 }
 
 
-
+function upgrade_module_1_1_0($module)
+{
+    return true;
+}
+function upgrade_module_1_1_1($module)
+{
+    return true;
+}
+function upgrade_module_1_1_2($module)
+{
+    return true;
+}

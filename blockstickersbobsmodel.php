@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,6 +34,7 @@ class BlockStickersBobsModel extends ObjectModel
           `" . _DB_PREFIX_ . "product`.`id_product`,
           `id_image`,
           `" . _DB_PREFIX_ . "product_lang`.`name`,
+          `" . _DB_PREFIX_ . "product_lang`.`link_rewrite`,
           `" . _DB_PREFIX_ . "product`.`reference`,
           `" . _DB_PREFIX_ . "category_lang`.`name` AS category_name,
           `" . _DB_PREFIX_ . "product`.`active`
@@ -115,6 +116,19 @@ class BlockStickersBobsModel extends ObjectModel
             $sql .= " ORDER BY " . $filter_name . ' ' . $filter_data['filter_order'];
         }
         $products = Db::getInstance()->executeS($sql);
+        foreach ($products as &$product) {
+            if (!is_array($product['link_rewrite'])) {
+                $linkRewrite = $product['link_rewrite'];
+            } else {
+                $linkRewrite = $product['link_rewrite'][key($product['link_rewrite'])];
+            }
+        
+            $cover = Product::getCover($product['id_product']);
+            $product['image'] = Context::getContext()->link->getImageLink(
+                $linkRewrite,
+                $cover ? $cover['id_image'] : ''
+            );
+        }
         return $products;
     }
 
@@ -217,5 +231,26 @@ class BlockStickersBobsModel extends ObjectModel
                               FROM `' . _DB_PREFIX_ . 'image`
                               WHERE id_product=' . (int)$id_product . '
                               AND `cover`=1');
+    }
+    
+    
+    public static function getProduct($id_product)
+    {
+        if (!$id_product) {
+            throw new \LogicException('You need to provide a product id', 5002);
+        }
+        
+        $product = new Product($id_product);
+        if ($product) {
+            if (!is_array($product->link_rewrite)) {
+                $linkRewrite = $product->link_rewrite;
+            } else {
+                $linkRewrite = $product->link_rewrite[key($product->link_rewrite)];
+            }
+            
+            $cover = Product::getCover($product->id);
+            $product->image = Context::getContext()->link->getImageLink($linkRewrite, $cover ? $cover['id_image'] : '');
+        }
+        return $product;
     }
 }

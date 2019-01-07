@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,7 +41,7 @@ class BlockStickersBobs extends Module
     {
         $this->name = 'blockstickersbobs';
         $this->tab = 'front_office_features';
-        $this->version = '1.1.1';
+        $this->version = '1.1.2';
         $this->author = 'Ivan Savelev';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -679,10 +679,10 @@ class BlockStickersBobs extends Module
         $stickers_products_id = StickersProductsBobsTable::getStickersProduct($id_product);
 
         $name_product = BlockStickersBobsModel::getNameProduct($id_product);
-
-        $id_image = BlockStickersBobsModel::getIdImageProduct($id_product);
-
-        $path_image_product = $this->getPathImage($id_image, 'home');
+    
+        $product = BlockStickersBobsModel::getProduct($id_product);
+    
+        $path_image_product = $product->image;
 
         $this->addCurrentUrlImgSt($stickers);
 
@@ -1059,7 +1059,7 @@ class BlockStickersBobs extends Module
 
         foreach ($products as $key => $product) {
             //IMAGE PRODUCT
-            $products[$key]['image_dir'] = $this->getPathImage($product['id_image'], 'cart');
+            $products[$key]['image_dir'] = $products[$key]['image'];
 
             //STICKERS
             $products[$key]['stickers'] = array();
